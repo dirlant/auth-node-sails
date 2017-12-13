@@ -5,7 +5,9 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
- bcrypt = require('bcrypt')
+ var bcrypt = require('bcrypt')
+ var jwt = require('jwt-simple');
+ var secret = sails.config.globals.jwtSecret;
 
  module.exports = {
 
