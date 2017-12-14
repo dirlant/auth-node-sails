@@ -9,96 +9,53 @@ var passport = require('passport');
 var passportJWT = require("passport-jwt");
 var jwt = require('jwt-simple');
 var ExtractJwt = require("passport-jwt").ExtractJwt;
+var bcrypt = require('bcrypt');
 
-var opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = 'secret';
+var jwt_options = {
+  jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey : 'pharol'
+}
 
 
 
 module.exports = {
-	login: function(req, res) {
-			passport.authenticate('local', function(err, user, info) {
-					if ((err) || (!user)) {
-							return res.send({
-									msg: info.msg,
-									msg_log: info.log,
-									user: user,
-									log: 'AuthController.js - line 1 aprox',
-							});
-					}
-					req.logIn(user, function(err) {
-							if (err) res.send(err);
-							return res.send({
-									msg: info.msg,
-									msg_log: info.log,
-									user: user,
-									log: 'AuthController.js - line 1 aprox',
-							});
-					});
 
-			})(req, res);
-	},
+	login: function (req, res)	{
 
-
-	auth: function (req, res)	{
 		if (req.param('email') && req.param('password')) {
+
 				var email = req.param('email');
 				var password = req.param('password')
 
-        var user = User.findOne(function(err, res) {
-						console.log(res);
-            return 'error'; //res.email === email && res.password === password;
-        });
+				User.findOne({ email: email }).exec(function(err, user) {
+					if(err)
+						return res.json({ server: err });
 
-        if (user) {
-            var payload = {
-                id: user.id
-            };
-            var token = jwt.encode(payload, opts.secretOrKey);
-            res.json({
-                token: token
-            });
-        } else {
-            res.send({ status: 401 });
-        }
+					if (!user)
+          	return res.json({ msg: 'invalid email!' });
+
+
+					bcrypt.compare(password, user.password, function (err, pass) {
+						if (!pass)
+							return res.json({ msg: 'invalid password!' });
+
+
+						var payload = {
+	              id: user.id,
+								mail: user.email
+	          };
+
+						var token = jwt.encode(payload, jwt_options.secretOrKey);
+
+						return res.json({ token: token });
+
+		      });
+
+				});
+
     } else {
-        res.send({ status: 401 });
+        res.send({ msg: 'user & password required!' });
     }
 	},
-
-
-
-
-
-	token: function(req, res) {
-			passport.authenticate('local', function(err, user, info) {
-					if ((err) || (!user)) {
-							return res.send({
-									msg: info.msg,
-									msg_log: info.log,
-									user: user,
-									log: 'AuthController.js - line 1 aprox',
-							});
-					}
-					req.logIn(user, function(err) {
-							if (err) res.send(err);
-							token = jwt.encode(user.id, sails.config.globals.jwt_secret);
-
-							console.log(user);
-							return res.send({
-									msg: info.msg,
-									msg_log: info.log,
-									token: token,
-									log: 'AuthController.js - line 1 aprox',
-							});
-					});
-
-			})(req, res);
-	},
-	logout: function (req, res) {
-    delete req.logout();
-    res.json({success: true})
-  },
 
 };

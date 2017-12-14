@@ -9,10 +9,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.globals.html
  */
 module.exports.globals = {
-  jwt_secret: "PharolSecret",
-  jwt_session: {
-      session: false
-  }
+
   /****************************************************************************
   *                                                                           *
   * Expose the lodash installed in Sails core as a global variable. If this   *
