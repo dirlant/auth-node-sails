@@ -1,0 +1,11 @@
+
+sails:
+  build: .
+  #from: node:4.0
+  ports:
+    - "1337:1000"
+  volumes:
+    - ./:/auth
+  command: npm run dev
+  environment:
+    - NODE_ENV=dev
