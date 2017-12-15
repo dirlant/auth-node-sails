@@ -37,6 +37,9 @@ module.exports.routes = {
   },
   'GET  /auth/login':   {controller: 'AuthController', action: 'login'},
 
+  'GET  /auth/google':   {controller: 'AuthController', action: 'google'},
+  'GET  /auth/google/callback':   {controller: 'AuthController', action: 'googleCallback'},
+
 
   /***************************************************************************
   *                                                                          *

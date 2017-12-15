@@ -12,7 +12,6 @@
    attributes: {
      username: {
        type: 'string',
-       required: true,
        unique: true
      },
      email: {
@@ -20,7 +19,10 @@
      },
      password: {
        type: 'string',
-       required: true
+
+     },
+     google_id: {
+       type: 'string'
      },
      toJSON: function() {
        var obj = this.toObject();
