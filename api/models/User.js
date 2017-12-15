@@ -19,10 +19,12 @@
      },
      password: {
        type: 'string',
-
      },
      google_id: {
-       type: 'string'
+       type: 'string',
+     },
+     facebook_id: {
+       type: 'string',
      },
      toJSON: function() {
        var obj = this.toObject();

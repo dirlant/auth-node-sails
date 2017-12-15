@@ -60,7 +60,7 @@ module.exports = {
   * Auth Google
   */
   google: function(req, res) {
-      console.log('step1');
+      //console.log('auth google');
       passport.authenticate('google', {
         scope : ['profile']
       })(req, res);
@@ -68,7 +68,31 @@ module.exports = {
 
   googleCallback: function(req,res){
     passport.authenticate('google', (req, user) => {
-      console.log(user.id);
+      //console.log(user.id);
+      var payload = {
+          id: user.id,
+      };
+
+      var token = jwt.encode(payload, jwt_options.secretOrKey);
+
+      return res.json({ token: token });
+    })(req, res);
+  },
+
+  /*
+  * Auth Facebook
+  */
+  facebook: function(req, res) {
+      //console.log('auth facebook');
+      passport.authenticate('facebook', {
+        scope : ['user_friends', 'manage_pages']
+      })(req, res);
+  },
+
+  facebookCallback: function(req,res){
+    passport.authenticate('facebook', (req, user) => {
+      //console.log(user.id);
+
       var payload = {
           id: user.id,
       };
@@ -79,7 +103,6 @@ module.exports = {
 
     })(req, res);
   },
-
 
   logout: function(req,res){
     req.logout();

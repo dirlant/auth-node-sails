@@ -35,10 +35,20 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
+  /*
+  * Auth Passporlocal + JWT
+  */
   'GET  /auth/login':   {controller: 'AuthController', action: 'login'},
-
+  /*
+  * Auth Passport Google + JWT
+  */
   'GET  /auth/google':   {controller: 'AuthController', action: 'google'},
   'GET  /auth/google/callback':   {controller: 'AuthController', action: 'googleCallback'},
+  /*
+  * Auth Passport Facebook + JWT
+  */
+  'GET  /auth/facebook':   {controller: 'AuthController', action: 'facebook'},
+  'GET  /auth/facebook/callback':   {controller: 'AuthController', action: 'facebookCallback'},
 
 
   /***************************************************************************

@@ -44,6 +44,7 @@ passport.use(new JwtStrategy(jwt_options, function(jwt_payload, done) {
     });
 }));
 
+
 /*
 * Google Strategy
 */
@@ -57,8 +58,31 @@ passport.use(new GoogleStrategy({
   },(accessToken, refreshToken, profile, cb) => {
     //console.log(profile);
     User.findOrCreate(
-      { google_id: profile.id} ,
-      {google_id: profile.id, username: profile.displayName }
+      { google_id: profile.id },
+      { google_id: profile.id }
+    ).exec((error, user) => {
+      //console.log(user);
+      return cb(error, user);
+    });
+  }
+));
+
+
+/*
+* Facebook Strategy
+*/
+
+var FacebookStrategy = require('passport-facebook').Strategy;
+
+passport.use(new FacebookStrategy({
+    clientID: '136414820389704',
+    clientSecret: 'b9f7563973974bb0be8c1d648b903bb7',
+    callbackURL: "http://localhost:1337/auth/facebook/callback",
+  },(accessToken, refreshToken, profile, cb) => {
+    //console.log(profile);
+    User.findOrCreate(
+      { facebook_id: profile.id },
+      { facebook_id: profile.id }
     ).exec((error, user) => {
       //console.log(user);
       return cb(error, user);
