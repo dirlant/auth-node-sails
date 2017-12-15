@@ -39,10 +39,8 @@ module.exports = {
 						if (!pass)
 							return res.json({ msg: 'invalid password!' });
 
-
 						var payload = {
 	              id: user.id,
-								mail: user.email
 	          };
 
 						var token = jwt.encode(payload, jwt_options.secretOrKey);
@@ -54,8 +52,37 @@ module.exports = {
 				});
 
     } else {
-        res.send({ msg: 'user & password required!' });
+      res.send({ msg: 'user & password required!' });
     }
 	},
 
+  /*
+  * Auth Google
+  */
+  google: function(req, res) {
+      console.log('step1');
+      passport.authenticate('google', {
+        scope : ['profile']
+      })(req, res);
+  },
+
+  googleCallback: function(req,res){
+    passport.authenticate('google', (req, user) => {
+      console.log(user.id);
+      var payload = {
+          id: user.id,
+      };
+
+      var token = jwt.encode(payload, jwt_options.secretOrKey);
+
+      return res.json({ token: token });
+
+    })(req, res);
+  },
+
+
+  logout: function(req,res){
+    req.logout();
+    res.send('logout');
+  },
 };
